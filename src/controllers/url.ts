@@ -2,6 +2,8 @@ import Url from "../models/url";
 import { Request, Response } from "express";
 import generateUniqueID from "../utils/generateLUniqueId";
 import { getLocationFromIp } from "../utils/getLocationFromIp";
+import { IPinfo } from "node-ipinfo";
+import ClickEvent from "../models/clickEvent";
 
 export async function handleGenerateShortUrl(req: Request, res: Response) {
   const body = req.body;
@@ -32,27 +34,77 @@ export async function handleRedirectToOriginalUrl(req: Request, res: Response) {
   const shortId = req.params.shortId;
   const ipAddress = req.clientIp;
 
-  const entry = await Url.findOneAndUpdate(
-    { shortId },
-    { $inc: { clicks: 1 } },
-    { new: true }
-  );
-
   if (ipAddress) {
-    (async () => {
-      try {
-        const result = await getLocationFromIp(ipAddress);
-        console.log(result);
-      } catch (error) {
-        console.error("Error in main function:", error);
-      }
-    })();
-  }
+    try {
+      const result = await getLocationFromIp(ipAddress);
+      const { ip, city, region, country, loc, org, postal, timezone } =
+        result as IPinfo; // Type assertion
 
-  console.log(entry);
-  if (entry) {
-    res.redirect(entry.originalUrl);
+      const data = await ClickEvent.create({
+        ipAddress: ip,
+        city: city,
+        region: region,
+        country: country,
+        loc: loc,
+        orgo: org,
+        postal: postal,
+        timezone: timezone,
+      });
+
+      console.log("data : " + data);
+
+      const entry = await Url.findOneAndUpdate(
+        { shortId },
+        { $push: { clicksHistory: data._id }, $inc: { clicks: 1 } },
+        { new: true }
+      );
+      // console.log(entry);
+      if (entry) {
+        res.redirect(entry.originalUrl);
+      } else {
+        res.status(404).json({ message: "URL not found" });
+      }
+    } catch (error) {
+      console.error("Error in main function:", error);
+    }
   } else {
-    res.status(404).json({ message: "URL not found" });
+    console.log("ipAddress is undefined");
+    const data = await ClickEvent.create({
+      ipAddress: "unknown",
+      city: "unknown",
+      region: "unknown",
+      country: "unknown",
+      loc: "unknown",
+      orgo: "unknown",
+      postal: "unknown",
+      timezone: "unknown",
+    });
+
+    const entry = await Url.findOneAndUpdate(
+      { shortId },
+      { $push: { clicksHistory: data._id }, $inc: { clicks: 1 } },
+      { new: true }
+    );
+    // console.log(entry);
+    if (entry) {
+      res.redirect(entry.originalUrl);
+    } else {
+      res.status(404).json({ message: "URL not found" });
+    }
+  }
+}
+
+export async function handleGetAnalytics(req: Request, res: Response) {
+  const shortId = req.params.shortId;
+
+  const result = await Url.findOne({ shortId });
+
+  if (result) {
+    return res.json({
+      totalClicks: result.clicks,
+      analytics: result.clicksHistory,
+    });
+  } else {
+    return res.status(404).json({ message: "URL not found" });
   }
 }
