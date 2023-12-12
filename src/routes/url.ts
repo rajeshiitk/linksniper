@@ -1,5 +1,5 @@
 import { Router } from "express";
-import handleGenerateShortUrl from "../controllers/url";
+import { handleGenerateShortUrl } from "../controllers/url";
 
 const urlRoute = Router();
 

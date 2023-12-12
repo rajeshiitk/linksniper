@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import urlRoute from "./routes/url";
 import connectToMongoDb from "./database/mongodb";
+import { handleRedirectToOriginalUrl } from "./controllers/url";
 //config .env path to .env.local
 dotenv.config({ path: ".env.local" });
 
@@ -15,6 +16,9 @@ app.use(express.json());
 
 // Routers
 app.use("/url", urlRoute);
+
+// Redirect to original URL
+app.get("/:shortId", handleRedirectToOriginalUrl);
 
 // Start the  server
 app.listen(process.env.PORT, () => {
