@@ -1,6 +1,7 @@
 import Url from "../models/url";
 import { Request, Response } from "express";
 import generateUniqueID from "../utils/generateLUniqueId";
+import { getLocationFromIp } from "../utils/getLocationFromIp";
 
 export async function handleGenerateShortUrl(req: Request, res: Response) {
   const body = req.body;
@@ -29,12 +30,24 @@ export async function handleGenerateShortUrl(req: Request, res: Response) {
 
 export async function handleRedirectToOriginalUrl(req: Request, res: Response) {
   const shortId = req.params.shortId;
-  console.log(shortId);
+  const ipAddress = req.clientIp;
+
   const entry = await Url.findOneAndUpdate(
     { shortId },
     { $inc: { clicks: 1 } },
-    { new: true } // return the updated document if it's false it will return the old document
-  ); // increment clicks by 1
+    { new: true }
+  );
+
+  if (ipAddress) {
+    (async () => {
+      try {
+        const result = await getLocationFromIp(ipAddress);
+        console.log(result);
+      } catch (error) {
+        console.error("Error in main function:", error);
+      }
+    })();
+  }
 
   console.log(entry);
   if (entry) {
