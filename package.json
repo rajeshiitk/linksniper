@@ -1,0 +1,23 @@
+{
+  "name": "linksniper",
+  "version": "1.0.0",
+  "description": "A sophisticated and scalable URL shortener service built with Node.js, TypeScript, and MongoDB. This application allows users to shorten long URLs, track click statistics, and provides a robust 'link in bio' feature. It follows the Model-Controller design pattern for a modular and maintainable codebase. Ideal for building a production-ready URL shortening service.",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.ts"
+  },
+  "author": "Rajesh",
+  "license": "ISC",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.14.0",
+    "@typescript-eslint/parser": "^6.14.0",
+    "eslint": "^8.55.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^8.0.3",
+    "nodemon": "^3.0.2"
+  }
+}
