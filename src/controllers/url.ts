@@ -97,7 +97,7 @@ export async function handleRedirectToOriginalUrl(req: Request, res: Response) {
 export async function handleGetAnalytics(req: Request, res: Response) {
   const shortId = req.params.shortId;
 
-  const result = await Url.findOne({ shortId });
+  const result = await Url.findOne({ shortId }).populate("clicksHistory");
 
   if (result) {
     return res.json({
