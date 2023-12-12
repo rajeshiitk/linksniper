@@ -1,15 +1,22 @@
 import express from "express";
 import dotenv from "dotenv";
-
-//config .env path
+import urlRoute from "./routes/url";
+import connectToMongoDb from "./database/mongodb";
+//config .env path to .env.local
 dotenv.config({ path: ".env.local" });
 
 const app = express();
 
-app.get("/", (req, res) => {
-  res.send("Hello world!");
-});
+// connection to mongodb
+connectToMongoDb();
 
+// Middlewares
+app.use(express.json());
+
+// Routers
+app.use("/url", urlRoute);
+
+// Start the  server
 app.listen(process.env.PORT, () => {
   console.log("Server running on port " + process.env.PORT);
 });
