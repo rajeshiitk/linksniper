@@ -5,6 +5,7 @@ import connectToMongoDb from "./database/mongodb";
 import { handleRedirectToOriginalUrl } from "./controllers/url";
 import requestIp from "request-ip";
 import { ipMiddleware } from "./utils/ipExtract";
+import path from "path";
 //config .env path to .env.local
 dotenv.config({ path: ".env.local" });
 
@@ -17,11 +18,25 @@ connectToMongoDb();
 app.use(express.json());
 app.use(requestIp.mw());
 
+app.set("view engine", "ejs");
+app.set("views", "src/views");
+
+console.log(path.join(__dirname, "public"));
+// Add this line at the top
+app.use(express.static(path.join(__dirname, "public")));
+
+// Add this line after app is defined
+app.use("/style.css", express.static(__dirname + "/public/style.css"));
+
 // Routers
 app.use("/url", urlRoute);
 
 // Redirect to original URL
-app.get("/:shortId", ipMiddleware, handleRedirectToOriginalUrl);
+app.get("/short/:shortId", ipMiddleware, handleRedirectToOriginalUrl);
+
+app.get("/home", (req, res) => {
+  res.render("home", { shortUrl: "kya mtlb kuch bhi" });
+});
 
 // Start the  server
 app.listen(process.env.PORT, () => {
