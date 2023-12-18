@@ -1,9 +1,9 @@
-import Url from "../models/url";
+import Url from "../models/url.model";
 import { Request, Response } from "express";
 import generateUniqueID from "../utils/generateLUniqueId";
 import { getLocationFromIp } from "../utils/getLocationFromIp";
 import { IPinfo } from "node-ipinfo";
-import ClickEvent from "../models/clickEvent";
+import ClickEvent from "../models/clickEvent.model";
 
 export async function handleGenerateShortUrl(req: Request, res: Response) {
   const body = req.body;

@@ -5,7 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/index.ts"
+    "dev": "nodemon src/server.ts"
   },
   "author": "Rajesh",
   "license": "ISC",
@@ -19,9 +19,12 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "http-status": "^1.7.3",
     "mongoose": "^8.0.3",
+    "morgan": "^1.10.0",
     "node-ipinfo": "^3.5.1",
     "nodemon": "^3.0.2",
     "request-ip": "^3.3.0"
