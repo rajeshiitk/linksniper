@@ -5,6 +5,9 @@ import { handleRedirectToOriginalUrl } from "./controllers/url";
 import requestIp from "request-ip";
 import { ipMiddleware } from "./utils/ipExtract";
 import router from "./routes/index";
+import ApiError from "./utils/ApiError";
+import httpStatus from "http-status";
+import { ErrorHandler } from "./midddlewares/Error";
 //config .env path to .env.local
 dotenv.config({ path: ".env.local" });
 
@@ -21,5 +24,11 @@ app.use("/url", urlRoute);
 
 // Redirect to original URL
 app.get("/:shortId", ipMiddleware, handleRedirectToOriginalUrl);
+
+app.use((req, res) => {
+  throw new ApiError(httpStatus.NOT_FOUND, "Page not found");
+});
+
+app.use(ErrorHandler);
 
 export default app;
