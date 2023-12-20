@@ -21,6 +21,13 @@ class authController {
     const resObj = await authService.profile(userId);
     return res.status(httpStatus.OK).send(resObj);
   });
+
+  static updateUser = catchAsyncError(async (req: Request, res: Response) => {
+    // @ts-expect-error  Property 'user' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+    const userId = req?.user;
+    const resObj = await authService.updateUser(userId, req?.body, req?.file);
+    return res.status(httpStatus.OK).send(resObj);
+  });
 }
 
 export default authController;

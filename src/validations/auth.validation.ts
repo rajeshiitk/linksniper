@@ -32,4 +32,9 @@ export class authValidation {
       .withMessage("Password must be at least 6 characters long")
       .escape(),
   ];
+
+  static updateUser = [
+    body("name").optional(),
+    body("email").isEmail().withMessage("Email must be valid").optional(),
+  ];
 }

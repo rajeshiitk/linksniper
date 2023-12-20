@@ -18,6 +18,14 @@ authRoute
   .route("/login")
   .post(authValidation.loginUser, authController.loginUser);
 
-authRoute.route("/profile").get(verifyToken, authController.profile);
+authRoute
+  .route("/profile")
+  .get(verifyToken, authController.profile)
+  .put(
+    verifyToken,
+    authValidation.updateUser,
+    upload.single("image"),
+    authController.updateUser
+  );
 
 export default authRoute;

@@ -1,6 +1,14 @@
 import httpStatus from "http-status";
 import User from "../models/user.model";
 import ApiError from "../utils/ApiError";
+import fs from "fs";
+import path from "path";
+
+interface IUpdateObj {
+  name?: string;
+  email?: string;
+  avatar?: string;
+}
 
 class authService {
   // TODO: fix issue with avator upload and save
@@ -70,6 +78,43 @@ class authService {
     return {
       message: "User profile",
       data: user,
+    };
+  }
+
+  static async updateUser(userId: string, body: any, file: any) {
+    const { name, email } = body;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      // delete file if user not found
+      if (file) {
+        if (fs.existsSync(file.path)) {
+          fs.unlinkSync(file.path);
+        }
+      }
+      throw new ApiError(httpStatus.BAD_REQUEST, "User not found");
+    }
+
+    const updateObj: IUpdateObj = {};
+    if (name) updateObj.name = name;
+    if (email) updateObj.email = email;
+    if (file) {
+      // delete old file if exists
+      if (
+        fs.existsSync(path.join(path.resolve(), "/src/uploads/" + user.avatar)) // here existsSync() will check if the file exists or not
+      ) {
+        fs.unlinkSync(path.join(path.resolve(), "/src/uploads/" + user.avatar)); // here unlinkSync() will delete the file
+      }
+      updateObj.avatar = file.filename;
+    }
+
+    const newUser = await User.findByIdAndUpdate(userId, updateObj, {
+      new: true,
+    });
+
+    return {
+      message: "User updated successfully",
+      data: newUser,
     };
   }
 }
