@@ -1,12 +1,21 @@
 import { Schema, Document, model } from "mongoose";
 import bcryptjs from "bcryptjs";
 
-export interface IUser extends Document {
+export interface IUserMethods {
+  ComparePassword: (password: string) => Promise<boolean>;
+  UpdatePassword: (password: string) => Promise<void>;
+}
+
+export interface IUser extends Document, IUserMethods {
   name: string;
   email: string;
   password: string;
   avatar?: string;
 }
+
+// multiple extends in interface
+
+// type interface for ComparePassword method
 
 const userSchema = new Schema<IUser>(
   {
@@ -50,13 +59,17 @@ userSchema.pre("save", async function (next) {
 // methods
 
 // compare password
-userSchema.methods.ComparePassword = async function (password: string) {
+userSchema.methods.ComparePassword = async function (
+  password: string
+): Promise<boolean> {
   const user = this as IUser;
   return await bcryptjs.compare(password, user.password);
 };
 
 // update password
-userSchema.methods.UpdatePassword = async function (password: string) {
+userSchema.methods.UpdatePassword = async function (
+  password: string
+): Promise<void> {
   const user = this as IUser;
   user.password = await bcryptjs.hash(password, 10);
   await user.save();

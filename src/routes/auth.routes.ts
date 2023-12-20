@@ -1,11 +1,20 @@
 import { Router } from "express";
 import authController from "../controllers/auth.controller";
 import { upload } from "../utils/multer";
+import { authValidation } from "../validations/auth.validation";
+import { validationError } from "../midddlewares/validation";
 
 const authRoute = Router();
 
+authRoute.route("/sign-up").post(
+  authValidation.signUpUser, // this middleware will validate the request body
+  //   validationError, // this middleware will check for any validation errors and throw an error if any
+  upload.single("image"),
+  authController.signUpUser
+);
+
 authRoute
-  .route("/sign-up")
-  .post(upload.single("image"), authController.signUpUser);
+  .route("/login")
+  .post(authValidation.loginUser, authController.loginUser);
 
 export default authRoute;

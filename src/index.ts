@@ -8,6 +8,7 @@ import router from "./routes/index";
 import ApiError from "./utils/ApiError";
 import httpStatus from "http-status";
 import { ErrorHandler } from "./midddlewares/Error";
+import path from "path";
 //config .env path to .env.local
 dotenv.config({ path: ".env.local" });
 
@@ -17,7 +18,12 @@ const app = express();
 app.use(express.json());
 app.use(requestIp.mw());
 
+// Routes
 app.use("/api/v1", router);
+
+// static files
+app.use("/static/", express.static(path.join(path.resolve(), "/src/uploads")));
+// console.log(path.join(path.resolve(), "uploads"));
 
 // Routers
 app.use("/url", urlRoute);
