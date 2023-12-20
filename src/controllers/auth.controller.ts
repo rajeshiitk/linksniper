@@ -6,7 +6,7 @@ import { Request, Response } from "express";
 class authController {
   static signUpUser = catchAsyncError(async (req: Request, res: Response) => {
     // TODO: fix issue with avator upload and save
-    const resObj = await authService.signUpUser(req?.body);
+    const resObj = await authService.signUpUser(req?.body, req?.file);
     return res.status(httpStatus.CREATED).send(resObj);
   });
   static loginUser = catchAsyncError(async (req: Request, res: Response) => {

@@ -10,26 +10,45 @@ interface IUpdateObj {
   avatar?: string;
 }
 
+// interface of multer file object
+// interface IFile {
+//   fieldname: string;
+//   originalname: string;
+//   encoding: string;
+//   mimetype: string;
+//   destination: string;
+//   filename: string;
+//   path: string;
+//   size: number;
+// }
+
 class authService {
   // TODO: fix issue with avator upload and save
-  static async signUpUser(body: any) {
+  static async signUpUser(body: any, file: any) {
     const { name, email, password } = body;
-    // if (!name || !email || !password) {
-    //   throw new Error("Please provide all the required fields");
-    // }
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       // TODO: implement file delete function is user already exists
-      throw new ApiError(httpStatus.BAD_REQUEST, "User already exists");
-      return;
+      // delete file if user already exists
+      if (fs.existsSync(file.path)) {
+        // fs.unlinkSync(path.join(path.resolve(), "/src/uploads/" + file.filename));
+        fs.unlinkSync(file.path);
+        throw new ApiError(httpStatus.BAD_REQUEST, "User already exists");
+      }
+      // if(!file) {
+      //   throw new ApiError(httpStatus.BAD_REQUEST, "Please provide a profile picture");
+      //   return;
+      // }
     }
 
     const newUser = await User.create({
       name,
       email,
       password,
+      avatar: file.filename,
     });
+    newUser.password = "";
 
     return {
       message: "User created successfully",
