@@ -1,9 +1,14 @@
 import { Schema, Document, model } from "mongoose";
 import bcryptjs from "bcryptjs";
+import jwt from "jsonwebtoken";
+
+import dotenv from "dotenv";
+dotenv.config({ path: ".env.local" });
 
 export interface IUserMethods {
   ComparePassword: (password: string) => Promise<boolean>;
   UpdatePassword: (password: string) => Promise<void>;
+  GenerateToken: (userId: string) => Promise<string>;
 }
 
 export interface IUser extends Document, IUserMethods {
@@ -56,7 +61,7 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-// methods
+// methods for userSchema
 
 // compare password
 userSchema.methods.ComparePassword = async function (
@@ -73,6 +78,22 @@ userSchema.methods.UpdatePassword = async function (
   const user = this as IUser;
   user.password = await bcryptjs.hash(password, 10);
   await user.save();
+};
+
+// jwt token methods
+
+// generate token
+userSchema.methods.GenerateToken = async function (
+  userId: string
+): Promise<string> {
+  const token = jwt.sign(
+    { _id: userId },
+    process.env.JWT_SECRET_KEY as string,
+    {
+      expiresIn: "7d",
+    }
+  );
+  return token;
 };
 
 const User = model<IUser>("User", userSchema);

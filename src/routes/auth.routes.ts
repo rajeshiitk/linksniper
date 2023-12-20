@@ -2,7 +2,8 @@ import { Router } from "express";
 import authController from "../controllers/auth.controller";
 import { upload } from "../utils/multer";
 import { authValidation } from "../validations/auth.validation";
-import { validationError } from "../midddlewares/validation";
+// import { validationError } from "../midddlewares/validation";
+import { verifyToken } from "../midddlewares/verifyToken";
 
 const authRoute = Router();
 
@@ -16,5 +17,7 @@ authRoute.route("/sign-up").post(
 authRoute
   .route("/login")
   .post(authValidation.loginUser, authController.loginUser);
+
+authRoute.route("/profile").get(verifyToken, authController.profile);
 
 export default authRoute;

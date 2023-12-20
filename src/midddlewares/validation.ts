@@ -12,9 +12,7 @@ export const validationError = async (
   if (!result.isEmpty()) {
     const error = result.array().map((err) => err.msg);
     console.log(error);
-    // throw new ApiError(httpStatus.BAD_REQUEST, error);
-    next(new ApiError(httpStatus.BAD_REQUEST, error[0])); // used next() instead of throw new ApiError() because we want to use the global error handler
-    return;
+    throw new ApiError(httpStatus.BAD_REQUEST, error[0]);
   }
-  next();
+  return next;
 };

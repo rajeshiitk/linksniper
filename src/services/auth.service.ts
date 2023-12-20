@@ -46,9 +46,30 @@ class authService {
       throw new ApiError(httpStatus.BAD_REQUEST, "Invalid credentials");
     }
 
+    const token = await existingUser.GenerateToken(existingUser._id);
+
+    if (!token) {
+      throw new ApiError(
+        httpStatus.INTERNAL_SERVER_ERROR,
+        "Something went wrong"
+      );
+    }
+
     return {
       message: "User logged in successfully",
-      data: existingUser,
+      token: token,
+    };
+  }
+
+  static async profile(userId: string) {
+    const user = await User.findById(userId).select("-password");
+    if (!user) {
+      throw new ApiError(httpStatus.BAD_REQUEST, "User not found");
+    }
+
+    return {
+      message: "User profile",
+      data: user,
     };
   }
 }

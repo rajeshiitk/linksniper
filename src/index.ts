@@ -31,7 +31,7 @@ app.use("/url", urlRoute);
 // Redirect to original URL
 app.get("/:shortId", ipMiddleware, handleRedirectToOriginalUrl);
 
-app.use((req, res) => {
+app.use(() => {
   throw new ApiError(httpStatus.NOT_FOUND, "Page not found");
 });
 
