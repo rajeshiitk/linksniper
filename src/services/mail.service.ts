@@ -1,5 +1,11 @@
 import nodemailer, { Transporter } from "nodemailer";
 import dotenv from "dotenv";
+import {
+  NODE_MAILER_EMAIL,
+  NODE_MAILER_HOST,
+  NODE_MAILER_PASSWORD,
+  NODE_MAILER_PORT,
+} from "../config";
 dotenv.config({ path: ".env.local" });
 
 class MailService {
@@ -10,12 +16,12 @@ class MailService {
 
   private constructor() {
     this.transporter = nodemailer.createTransport({
-      host: process.env.NODE_MAILER_HOST,
-      port: Number(process.env.NODE_MAILER_PORT),
+      host: NODE_MAILER_HOST,
+      port: Number(NODE_MAILER_PORT),
       secure: true,
       auth: {
-        user: process.env.NODE_MAILER_EMAIL,
-        pass: process.env.NODE_MAILER_PASSWORD,
+        user: NODE_MAILER_EMAIL,
+        pass: NODE_MAILER_PASSWORD,
       },
     });
   }

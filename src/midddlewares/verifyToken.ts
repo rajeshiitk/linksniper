@@ -11,6 +11,7 @@ import httpStatus from "http-status";
 import ApiError from "../utils/ApiError";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { JWT_SECRET_KEY } from "../config";
 dotenv.config({ path: ".env.local" });
 
 // import "../types/customRequest.d.ts";
@@ -38,7 +39,7 @@ export const verifyToken = async (
   }
 
   try {
-    const { _id } = jwt.verify(token, process.env.JWT_SECRET_KEY as string) as {
+    const { _id } = jwt.verify(token, JWT_SECRET_KEY as string) as {
       _id: string;
     };
     console.log("id", _id);

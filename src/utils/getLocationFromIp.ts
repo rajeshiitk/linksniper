@@ -1,8 +1,9 @@
 import IPinfoWrapper, { IPinfo, ApiLimitError } from "node-ipinfo";
 import dotenv from "dotenv";
+import { IPINFO_TOKEN } from "../config";
 dotenv.config({ path: ".env.local" });
 
-const ipInfoToken = process.env.IPINFO_TOKEN || ""; //
+const ipInfoToken = IPINFO_TOKEN || ""; //
 
 console.log(ipInfoToken);
 if (!ipInfoToken) {

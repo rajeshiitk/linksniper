@@ -3,6 +3,7 @@ import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 import dotenv from "dotenv";
+import { JWT_SECRET_KEY } from "../config";
 dotenv.config({ path: ".env.local" });
 
 export interface IUserMethods {
@@ -91,13 +92,9 @@ userSchema.methods.UpdatePassword = async function (
 userSchema.methods.GenerateToken = async function (
   userId: string
 ): Promise<string> {
-  const token = jwt.sign(
-    { _id: userId },
-    process.env.JWT_SECRET_KEY as string,
-    {
-      expiresIn: "7d",
-    }
-  );
+  const token = jwt.sign({ _id: userId }, JWT_SECRET_KEY as string, {
+    expiresIn: "7d",
+  });
   return token;
 };
 
@@ -106,22 +103,15 @@ userSchema.methods.GenerateForgotPasswordToken = async function (
   userId: string,
   email: string
 ): Promise<string> {
-  const token = jwt.sign(
-    { _id: userId },
-    (process.env.JWT_SECRET_KEY as string) + email,
-    {
-      expiresIn: "1h",
-    }
-  );
+  const token = jwt.sign({ _id: userId }, (JWT_SECRET_KEY as string) + email, {
+    expiresIn: "1h",
+  });
   return token;
 };
 // verify token
 userSchema.methods.VerifyUpdatePasswordToken = async function (token: string) {
   const user = this as IUser;
-  const decoded = jwt.verify(
-    token,
-    (process.env.JWT_SECRET_KEY as string) + user.email
-  );
+  const decoded = jwt.verify(token, (JWT_SECRET_KEY as string) + user.email);
   if (decoded) {
     return true;
   }

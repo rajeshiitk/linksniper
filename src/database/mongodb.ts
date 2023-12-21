@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
+import { MONGODB_URL } from "../config";
 
 async function connectToMongoDb() {
-  const mongoDbUrl: string = process.env.MONGODB_URL || ""; // Provide a default empty string or replace it with an appropriate default value
+  const mongoDbUrl: string = MONGODB_URL || ""; // Provide a default empty string or replace it with an appropriate default value
 
   try {
     if (!mongoDbUrl) {
