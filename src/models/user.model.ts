@@ -9,6 +9,11 @@ export interface IUserMethods {
   ComparePassword: (password: string) => Promise<boolean>;
   UpdatePassword: (password: string) => Promise<void>;
   GenerateToken: (userId: string) => Promise<string>;
+  GenerateForgotPasswordToken: (
+    userId: string,
+    email: string
+  ) => Promise<string>;
+  VerifyUpdatePasswordToken: (token: string) => Promise<boolean>;
 }
 
 export interface IUser extends Document, IUserMethods {
@@ -94,6 +99,34 @@ userSchema.methods.GenerateToken = async function (
     }
   );
   return token;
+};
+
+// generate forgot password token
+userSchema.methods.GenerateForgotPasswordToken = async function (
+  userId: string,
+  email: string
+): Promise<string> {
+  const token = jwt.sign(
+    { _id: userId },
+    (process.env.JWT_SECRET_KEY as string) + email,
+    {
+      expiresIn: "1h",
+    }
+  );
+  return token;
+};
+// verify token
+userSchema.methods.VerifyUpdatePasswordToken = async function (token: string) {
+  const user = this as IUser;
+  const decoded = jwt.verify(
+    token,
+    (process.env.JWT_SECRET_KEY as string) + user.email
+  );
+  if (decoded) {
+    return true;
+  }
+
+  return false;
 };
 
 const User = model<IUser>("User", userSchema);

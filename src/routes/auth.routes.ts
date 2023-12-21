@@ -28,4 +28,11 @@ authRoute
     authController.updateUser
   );
 
+authRoute
+  .route("/forgot-password")
+  .post(authValidation.forgotPassword, authController.forgotPassword);
+
+authRoute
+  .route("/update-password")
+  .put(authValidation.updatePassword, authController.updatePassword);
 export default authRoute;

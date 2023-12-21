@@ -3,6 +3,7 @@ import User from "../models/user.model";
 import ApiError from "../utils/ApiError";
 import fs from "fs";
 import path from "path";
+import MailService from "./mail.service";
 
 interface IUpdateObj {
   name?: string;
@@ -134,6 +135,77 @@ class authService {
     return {
       message: "User updated successfully",
       data: newUser,
+    };
+  }
+
+  static async forgotPassword(body: any) {
+    const { email } = body;
+
+    const existingUser = await User.findOne({ email });
+    if (!existingUser) {
+      throw new ApiError(httpStatus.BAD_REQUEST, "User not found");
+    }
+
+    const token = await existingUser.GenerateForgotPasswordToken(
+      existingUser._id,
+      existingUser.email
+    );
+
+    if (!token) {
+      throw new ApiError(
+        httpStatus.INTERNAL_SERVER_ERROR,
+        "Something went wrong"
+      );
+    }
+
+    const mailService = MailService.getInstance();
+
+    const to = email;
+    const subject = "Password Reset ✔";
+    // const text = "Hello world?";
+    const html = `
+    <h1>Forget Password</h1>
+    hey ,${existingUser.name}
+    <a href="http://localhost:500/update-password?token=${token}">click here to update your password</a>
+    `;
+
+    await mailService.sendMail(to, subject, html);
+
+    return {
+      message: "Password reset link sent to your email",
+    };
+  }
+
+  static async updatePassword(body: any) {
+    const { email, password, confirmPassword } = body;
+
+    if (password !== confirmPassword) {
+      throw new ApiError(
+        httpStatus.BAD_REQUEST,
+        "Password and confirm password must be same"
+      );
+    }
+
+    const existingUser = await User.findOne({ email });
+
+    // const existingUser = User.findOneAndUpdate(
+    //   { email },
+    //   { password },
+    //   { new: true }
+    // );
+
+    if (!existingUser) {
+      throw new ApiError(httpStatus.BAD_REQUEST, "User not found");
+    }
+
+    if (!existingUser.VerifyUpdatePasswordToken(body.token)) {
+      throw new ApiError(httpStatus.BAD_REQUEST, "Session expired");
+    }
+
+    await existingUser.UpdatePassword(password);
+
+    return {
+      message: "Password updated successfully",
     };
   }
 }

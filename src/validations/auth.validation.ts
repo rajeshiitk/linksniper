@@ -37,4 +37,38 @@ export class authValidation {
     body("name").optional(),
     body("email").isEmail().withMessage("Email must be valid").optional(),
   ];
+
+  static forgotPassword = [
+    body("email")
+      .notEmpty()
+      .withMessage("Email is required")
+      .isEmail()
+      .withMessage("Email must be valid")
+      .escape(),
+  ];
+
+  static updatePassword = [
+    body("email")
+      .notEmpty()
+      .withMessage("Email is required")
+      .isEmail()
+      .withMessage("Email must be valid")
+      .escape(),
+
+    body("password")
+      .notEmpty()
+      .withMessage("Password is required")
+      .isLength({ min: 6 })
+      .withMessage("Password must be at least 6 characters long")
+      .escape(),
+
+    body("confirmPassword")
+      .notEmpty()
+      .withMessage("Confirm Password is required")
+      .isLength({ min: 6 })
+      .withMessage("Confirm Password must be at least 6 characters long")
+      .escape(),
+
+    body("token").notEmpty().withMessage("Token is required").escape(),
+  ];
 }
