@@ -11,12 +11,15 @@ import { ErrorHandler } from "./midddlewares/Error";
 import path from "path";
 //config .env path to .env.local
 dotenv.config({ path: ".env.local" });
+import cors from "cors";
 
 const app = express();
+app.use(cors());
 
 // Middlewares
 app.use(express.json());
 app.use(requestIp.mw());
+app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use("/api/v1", router);

@@ -1,10 +1,7 @@
 import dotenv from "dotenv";
-
-// Load environment variables from a single file
 dotenv.config({ path: ".env.local" });
 
 // Export the variables
-
 export const PORT = process.env.PORT || 3000;
 export const MONGODB_URL = process.env.MONGODB_URL || "";
 export const IPINFO_TOKEN = process.env.IPINFO_TOKEN || "";
