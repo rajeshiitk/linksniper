@@ -96,8 +96,7 @@ class authService {
     }
 
     return {
-      message: "User profile",
-      data: user,
+      user: user,
     };
   }
 

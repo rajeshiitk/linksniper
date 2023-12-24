@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { NextFunction, Request, Response, Router } from "express";
 import authController from "../controllers/auth.controller";
 import { upload } from "../utils/multer";
 import { authValidation } from "../validations/auth.validation";
@@ -15,9 +15,14 @@ authRoute.route("/sign-up").post(
   authController.signUpUser
 );
 
-authRoute
-  .route("/login")
-  .post(authValidation.loginUser, authController.loginUser);
+authRoute.route("/login").post(
+  (req: Request, res: Response, next: NextFunction) => {
+    console.log(req.body);
+    next();
+  },
+  authValidation.loginUser,
+  authController.loginUser
+);
 
 authRoute
   .route("/profile")
