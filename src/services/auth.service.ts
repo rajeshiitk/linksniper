@@ -165,7 +165,7 @@ class authService {
     const html = `
     <h1>Forget Password</h1>
     hey ,${existingUser.name}
-    <a href="http://localhost:500/update-password?token=${token}">click here to update your password</a>
+    <a href="http://localhost:3000/update-password?token=${token}">click here to update your password</a>
     `;
 
     await mailService.sendMail(to, subject, html);
