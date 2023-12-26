@@ -4,6 +4,7 @@ import ApiError from "../utils/ApiError";
 import fs from "fs";
 import path from "path";
 import MailService from "./mail.service";
+import bcryptjs from "bcryptjs";
 
 interface IUpdateObj {
   name?: string;
@@ -201,8 +202,10 @@ class authService {
       throw new ApiError(httpStatus.BAD_REQUEST, "Session expired");
     }
 
-    await existingUser.UpdatePassword(password);
+    // await existingUser.UpdatePassword(password);
+    const hashPassword = await bcryptjs.hash(password, 10);
 
+    await existingUser.updateOne({ password: hashPassword });
     return {
       message: "Password updated successfully",
     };

@@ -82,6 +82,7 @@ userSchema.methods.UpdatePassword = async function (
   password: string
 ): Promise<void> {
   const user = this as IUser;
+  console.log("user : ", user, "password : ", password);
   user.password = await bcryptjs.hash(password, 10);
   await user.save();
 };
@@ -110,6 +111,7 @@ userSchema.methods.GenerateForgotPasswordToken = async function (
 };
 // verify token
 userSchema.methods.VerifyUpdatePasswordToken = async function (token: string) {
+  // TODO: we need to handle Vefied token error
   const user = this as IUser;
   const decoded = jwt.verify(token, (JWT_SECRET_KEY as string) + user.email);
   if (decoded) {
