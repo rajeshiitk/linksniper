@@ -7,6 +7,7 @@ import ClickEvent from "../models/clickEvent.model";
 
 export async function handleGenerateShortUrl(req: Request, res: Response) {
   const body = req.body;
+  console.log(req.body);
   console.log(body);
   if (!body.originalUrl) {
     return res.status(400).json({

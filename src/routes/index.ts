@@ -1,5 +1,6 @@
 import { Router } from "express";
 import authRoute from "./auth.routes";
+import urlRoute from "./url.routes";
 
 const router = Router();
 
@@ -7,6 +8,10 @@ const routes = [
   {
     path: "/auth",
     router: authRoute,
+  },
+  {
+    path: "/url",
+    router: urlRoute,
   },
 ];
 

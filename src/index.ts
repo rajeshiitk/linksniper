@@ -1,6 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
-import urlRoute from "./routes/url";
+// import urlRoute from "./routes/url";
 import { handleRedirectToOriginalUrl } from "./controllers/url";
 import requestIp from "request-ip";
 import { ipMiddleware } from "./utils/ipExtract";
@@ -29,7 +29,7 @@ app.use("/static/", express.static(path.join(path.resolve(), "/src/uploads")));
 // console.log(path.join(path.resolve(), "uploads"));
 
 // Routers
-app.use("/url", urlRoute);
+// app.use("/api/v1", urlRoute);
 
 // Redirect to original URL
 app.get("/:shortId", ipMiddleware, handleRedirectToOriginalUrl);
