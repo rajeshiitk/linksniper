@@ -30,6 +30,9 @@ app.use("/static/", express.static(path.join(path.resolve(), "/src/uploads")));
 
 // Routers
 // app.use("/api/v1", urlRoute);
+app.get("/", (req, res) => {
+  res.send("Welcome to Linksniper !");
+});
 
 // Redirect to original URL
 app.get("/:shortId", ipMiddleware, handleRedirectToOriginalUrl);
