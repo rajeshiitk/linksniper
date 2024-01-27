@@ -3,7 +3,7 @@ import app from "./index";
 import connectToMongoDb from "./database/mongodb";
 import { PORT } from "./config";
 // config .env path to .env.local
-dotenv.config({ path: ".env.local" });
+dotenv.config({ path: ".env" });
 
 // connection to mongodb
 connectToMongoDb();

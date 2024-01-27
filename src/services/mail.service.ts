@@ -6,7 +6,7 @@ import {
   NODE_MAILER_PASSWORD,
   NODE_MAILER_PORT,
 } from "../config";
-dotenv.config({ path: ".env.local" });
+dotenv.config({ path: ".env" });
 
 class MailService {
   private static instance: MailService; // this is a static property which will hold the instance of this class and we will use this instance to call the methods of this class from outside of this class

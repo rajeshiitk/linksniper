@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-dotenv.config({ path: ".env.local" });
+dotenv.config({ path: ".env" });
 
 // Export the variables
 export const PORT = process.env.PORT || 3000;

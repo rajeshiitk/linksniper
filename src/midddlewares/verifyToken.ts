@@ -12,7 +12,7 @@ import ApiError from "../utils/ApiError";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { JWT_SECRET_KEY } from "../config";
-dotenv.config({ path: ".env.local" });
+dotenv.config({ path: ".env" });
 
 // import "../types/customRequest.d.ts";
 

@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 
 import dotenv from "dotenv";
 import { JWT_SECRET_KEY } from "../config";
-dotenv.config({ path: ".env.local" });
+dotenv.config({ path: ".env" });
 
 export interface IUserMethods {
   ComparePassword: (password: string) => Promise<boolean>;
