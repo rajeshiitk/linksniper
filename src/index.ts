@@ -9,7 +9,6 @@ import ApiError from "./utils/ApiError";
 import httpStatus from "http-status";
 import { ErrorHandler } from "./midddlewares/Error";
 import path from "path";
-//config .env path to .env.local
 dotenv.config({ path: ".env" });
 import cors from "cors";
 
