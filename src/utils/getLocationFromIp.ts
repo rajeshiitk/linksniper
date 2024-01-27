@@ -1,7 +1,5 @@
 import IPinfoWrapper, { IPinfo, ApiLimitError } from "node-ipinfo";
-import dotenv from "dotenv";
 import { IPINFO_TOKEN } from "../config";
-dotenv.config({ path: ".env" });
 
 const ipInfoToken = IPINFO_TOKEN || ""; //
 
@@ -13,8 +11,10 @@ if (!ipInfoToken) {
 const ipinfoWrapper = new IPinfoWrapper(ipInfoToken);
 
 export const getLocationFromIp = async (ipAddress: string) => {
+  const ipv4Address = ipAddress.replace("::ffff:", "");
+
   try {
-    const response: IPinfo = await ipinfoWrapper.lookupIp(ipAddress);
+    const response: IPinfo = await ipinfoWrapper.lookupIp(ipv4Address);
     return response;
   } catch (error) {
     console.error("Error:", error);
